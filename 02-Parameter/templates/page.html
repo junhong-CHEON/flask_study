@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>02-Parameter</h1>
+    <hr />
+
+    <button type='button' id='btn-get'>GET</button>
+    <button type='button' id='btn-post'>POST</button>
+    <button type='button' id='btn-put'>PUT</button>
+    <button type='button' id='btn-delete'>DELETE</button>
+    <hr />
+
+    <div id='result'></div>
+
+    <script src="//code.jquery.com/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/jquery-method-override.js') }}"></script>
+    <script>
+        $(() => {
+            $("#btn-get").click( () => {
+                $.get('/parameter/get', {
+                    num1: 100,
+                    num2: 200
+                }, (req) => {
+                    $("#result").html(req);
+                });
+            } );
+
+            $("#btn-post").click( () => {
+                $.post('/parameter/post', {
+                    name: "플라스크",
+                    email: "flask@gmail.com"
+                }, (req) => {
+                    $("#result").html(req);
+                });
+            } );
+
+            $("#btn-put").click( () => {
+                $.put('/parameter/put', {
+                    name: "플라스크",
+                    email: "flask@gmail.com"
+                }, (req) => {
+                    $("#result").html(req);
+                });
+            } );
+
+            $("#btn-delete").click( () => {
+                $.delete('/parameter/delete', {
+                    name: "플라스크",
+                    email: "flask@gmail.com"
+                }, (req) => {
+                    $("#result").html(req);
+                });
+            } );
+        });
+    </script>
+</body>
+</html>

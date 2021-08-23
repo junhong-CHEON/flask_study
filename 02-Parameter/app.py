@@ -5,7 +5,7 @@
 """
 
 # 패키지 참조
-from flask import Flask, request
+from flask import Flask, request, render_template
 
 # Flask 메인 객체 생성
 # -> __name__ 은 이 소스파일의 이름
@@ -73,6 +73,10 @@ def delete():
     
     output = "<h1>(Delete) %s님의 이메일은 %s 입니다.</h1>" % (my_name, my_email)
     return output
+
+@app.route('/parameter/my_webpage_test', methods=['GET'])
+def page():
+    return render_template('page.html')
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=9901, debug=True)
