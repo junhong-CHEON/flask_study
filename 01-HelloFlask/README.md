@@ -1,4 +1,4 @@
-# flask_study
+# 01-HelloFlask
 ---
 
 Flask 학습 자료
