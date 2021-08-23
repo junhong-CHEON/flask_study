@@ -11,23 +11,67 @@ from flask import Flask, request
 # -> __name__ 은 이 소스파일의 이름
 app = Flask(__name__)
 
-# get 파라미터 수신 하기
+# get 파라미터 수신 하기 -> methods를 지정하지 않으면 기본값은 GET
 @app.route("/parameter/get", methods=['GET'])
 def get():
-    num1 = request.args.get('num1')
-    num2 = request.args.get('num2')
-    sum1 = num1 + num2
-    sum2 = int(num1) + int(num2)
+    # URL에 포함된 변수 추출
+    # ?num1=OOOO&num2=OOOOO
+    my_num1 = request.args.get('num1')
+    my_num2 = request.args.get('num2')
+    
+    # 정확한 구현을 위해서는 이 위치에서 파라미터가 존재하는지 여부와 숫자 형식이 맞는지 검증이 필요함.
+    # -> 유효성 검사
+    if not my_num1 or not my_num1.isdigit():
+        return "num1이 없거나 숫자 형식이 아닙니다."
+    
+    if not my_num2 or not my_num2.isdigit():
+        return "num2가 없거나 숫자 형식이 아닙니다."
+    
+    # parameter로 전송받은 모든 변수는 무조건 문자열.
+    sum1 = my_num1 + my_num2
+    
+    # 연산이 필요하다면 형변환이 필수.
+    sum2 = int(my_num1) + int(my_num2)
     
     output = "<h1>sum1=%s</h1><h1>sum2=%d</h1>" % (sum1, sum2)
     return output
 
+# post 파라미터 수신 하기
+# methods에 `POST`라고 지정하였으므로 post 전송방식이 아니면 접근 불가.
+# 브라우저에 주소 직접 입력은 GET방식 전송에 해당하므로 브라우저로는 이 페이지 접근 불가.
 @app.route("/parameter/post", methods=['POST'])
 def post():
-    name = request.form('name')
-    email = request.form('email')
+    # POST방식으로 전송된 변수 추출하기
+    # <input type="???" name="name">
+    # <input type="???" name="email">
+    my_name = request.form.get('name')
+    my_email = request.form.get('email')
     
-    output = "<h1>%s님의 이메일은 %s 입니다.</h1>" % (name, email)
+    output = "<h1>(Post) %s님의 이메일은 %s 입니다.</h1>" % (my_name, my_email)
+    return output
+
+# put 파라미터 수신 하기
+@app.route("/parameter/put", methods=['PUT'])
+def put():
+    # POST방식으로 전송된 변수 추출하기
+    # <input type="???" name="name">
+    # <input type="???" name="email">
+    my_name = request.form.get('name')
+    my_email = request.form.get('email')
+    
+    output = "<h1>(Put) %s님의 이메일은 %s 입니다.</h1>" % (my_name, my_email)
+    return output
+
+# put 파라미터 수신 하기
+@app.route("/parameter/delete", methods=['DELETE'])
+def delete():
+    # POST방식으로 전송된 변수 추출하기
+    # <input type="???" name="name">
+    # <input type="???" name="email">
+    my_name = request.form.get('name')
+    my_email = request.form.get('email')
+    
+    output = "<h1>(Delete) %s님의 이메일은 %s 입니다.</h1>" % (my_name, my_email)
     return output
 
 if __name__ == "__main__":
