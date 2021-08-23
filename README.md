@@ -21,6 +21,8 @@ pip install --upgrade flask
 
 ### 1) 기본 소스코드 작성
 
+예제마다 폴더를 생성하고 그 안에서 flask 프로그램의 소스코드 이름을 app.py로 지정
+
 #### 01-HelloFlask/app.py
 ```python
 # 패키지 참조
@@ -35,32 +37,35 @@ app = Flask(__name__)
 @app.route("/hello_flask")
 def hello_flask():
     return "<h1>Hello Flask~!!!</h1>"
+
+# 기본 옵션 이외의 사용자 지정 옵션을 사용해서 웹 서버 가동하기
+if __name__ == '__main__':
+    # 기본 옵션대로 가동
+    # app.run()
+    
+    # 가동할 주소와 포트번호 지정 및 디버그 모드 활성화
+    # 디버깅이란 에러를 추적하는 행위.
+    # 디버그 모드란 프로그램의 실행 과정을 개발자가 파악할 수 있도록 상세하게 출력해 주는 것
+    app.run(host='127.0.0.1', port=9901, debug=True)
 ```
 
-### 2) 작성된 프로그램 가동하기
+### 2) 작성된 프록그램 가동하기
+
+#### 실제 운영시
 
 `flask run` 이라는 명령으로 가동하지만 특별한 옵션 이 없을 경우 
 명령어가 실행되는 디렉토리의 `app.py`라는 파일을 찾아서 실행시키는 것이 기본값.
 
-#### 방법1) - 수업에서 채택한 방법
-
-예제마다 폴더를 생성하고 그 안에서 flask 프로그램의 소스코드 이름을 app.py로 지정
-
-#### 방법2) - 소스파일 이름이 app.py가 아닌 경우
-
-예제마다 파일이름을 다르게 지정하고 명령어 실행시
-
-##### windows
 ```shell
-set FLASK_APP=소스파일이름
 flask run
 ```
 
-##### mac, linux
+#### 디버그 모드로 가동시
+
 ```shell
-export $env FLASK_APP=소스파일이름
-flask run
+python app.py
 ```
+
 
 ### 3) 가동중인 웹 서버의 주소 확인하기
 
