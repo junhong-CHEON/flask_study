@@ -1,0 +1,56 @@
+"""
+03-Restful
+클래스 기반으로 Flask API 만들기
+"""
+
+# 패키지 참조
+from flask import Flask
+from flask_restful import Resource, Api
+
+# Flask 메인 객체 생성
+app = Flask(__name__)
+api = Api(app)
+
+# JSON 페이지를 담당하는 클래스
+class Department(Resource):
+    def get(self):
+        # 출력 결과는 json 형식으로 구성되어야 함
+        return {'msg': "Department::get 방식으로 접속함"}
+    
+    def post(self):
+        return {'msg': "Department::post 방식으로 접속함"}
+    
+    def put(self):
+        return {'msg': "Department::put 방식으로 접속함"}
+    
+    def delete(self):
+        return {'msg': "Department::delete 방식으로 접속함"}
+    
+class Professor(Resource):
+    def get(self):
+        # 출력 결과는 json 형식으로 구성되어야 함
+        return {'msg': "Professor::get 방식으로 접속함"}
+    
+    def post(self):
+        return {'msg': "Professor::post 방식으로 접속함"}
+    
+    def put(self):
+        return {'msg': "Professor::put 방식으로 접속함"}
+    
+    def delete(self):
+        return {'msg': "Professor::delete 방식으로 접속함"}
+
+# Class를 /my_restful 이라는 URL로 등록
+# 기본적으로 get, post, put, delete라는 메서드는 자동으로 각 접속 방식에 맞게 적용됨
+api.add_resource(Department, '/department')
+
+# 접속방식에 따라 URL 다르게 설정하기
+# -> endpoint는 url의 마지막 경로명
+api.add_resource(Professor, '/professor/hello', endpoint='hello', methods=['GET'])
+api.add_resource(Professor, '/professor/world', endpoint='world', methods=['POST'])
+api.add_resource(Professor, '/professor/foo', endpoint='foo', methods=['PUT'])
+api.add_resource(Professor, '/professor/bar', endpoint='bar', methods=['DELETE'])
+
+# 프로그램 가동
+if __name__ == "__main__":
+    app.run(host='127.0.0.1', port=9901, debug=True)
