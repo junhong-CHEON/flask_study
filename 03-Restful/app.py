@@ -4,7 +4,7 @@ import sys
 from flask import Flask
 from flask_restful import Resource, Api
 
-# controllers 폴더를 import시 인식할 수 있도록 path 등록
+# 다른 폴더안의 파일들까지 import할 수 있도록 path 등록
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # controller 클래스 참조

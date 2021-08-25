@@ -5,11 +5,20 @@
 """
 
 # 패키지 참조
+import os
+import sys
+
+# 다른 폴더안의 파일들까지 import할 수 있도록 path 등록
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from flask import Flask, request, render_template
+from utils.Regex import Regex
 
 # Flask 메인 객체 생성
 # -> __name__ 은 이 소스파일의 이름
 app = Flask(__name__)
+
+regex = Regex()
 
 # get 파라미터 수신 하기 -> methods를 지정하지 않으면 기본값은 GET
 @app.route("/parameter/get", methods=['GET'])
@@ -21,11 +30,11 @@ def get():
     
     # 정확한 구현을 위해서는 이 위치에서 파라미터가 존재하는지 여부와 숫자 형식이 맞는지 검증이 필요함.
     # -> 유효성 검사
-    if not my_num1 or not my_num1.isdigit():
-        return "num1이 없거나 숫자 형식이 아닙니다."
-    
-    if not my_num2 or not my_num2.isdigit():
-        return "num2가 없거나 숫자 형식이 아닙니다."
+    try:
+        regex.num(my_num1, 'num1값이 숫자 형식이 아닙니다.')
+        regex.num(my_num2, 'num2값이 숫자 형식이 아닙니다.')
+    except Exception as e:
+        return str(e)
     
     # parameter로 전송받은 모든 변수는 무조건 문자열.
     sum1 = my_num1 + my_num2
@@ -47,6 +56,14 @@ def post():
     my_name = request.form.get('name')
     my_email = request.form.get('email')
     
+    try:
+        regex.kor(my_name, '이름은 한글만 입력 가능합니다.')
+        regex.min_length(my_name, 2, '이름은 2~5글자까지만 입력 가능합니다.')
+        regex.max_length(my_name, 5, '이름은 2~5글자까지만 입력 가능합니다.')
+        regex.email(my_email, '이메일 형식이 잘못되었습니다.')
+    except Exception as e:
+        return str(e)
+    
     output = "<h1>(Post) %s님의 이메일은 %s 입니다.</h1>" % (my_name, my_email)
     return output
 
@@ -59,6 +76,14 @@ def put():
     my_name = request.form.get('name')
     my_email = request.form.get('email')
     
+    try:
+        regex.kor(my_name, '이름은 한글만 입력 가능합니다.')
+        regex.min_length(my_name, 2, '이름은 2~5글자까지만 입력 가능합니다.')
+        regex.max_length(my_name, 5, '이름은 2~5글자까지만 입력 가능합니다.')
+        regex.email(my_email, '이메일 형식이 잘못되었습니다.')
+    except Exception as e:
+        return str(e)
+    
     output = "<h1>(Put) %s님의 이메일은 %s 입니다.</h1>" % (my_name, my_email)
     return output
 
@@ -70,6 +95,14 @@ def delete():
     # <input type="???" name="email">
     my_name = request.form.get('name')
     my_email = request.form.get('email')
+    
+    try:
+        regex.kor(my_name, '이름은 한글만 입력 가능합니다.')
+        regex.min_length(my_name, 2, '이름은 2~5글자까지만 입력 가능합니다.')
+        regex.max_length(my_name, 5, '이름은 2~5글자까지만 입력 가능합니다.')
+        regex.email(my_email, '이메일 형식이 잘못되었습니다.')
+    except Exception as e:
+        return str(e)
     
     output = "<h1>(Delete) %s님의 이메일은 %s 입니다.</h1>" % (my_name, my_email)
     return output

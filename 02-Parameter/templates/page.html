@@ -10,6 +10,9 @@
     <h1>02-Parameter</h1>
     <hr />
 
+    <input type='text' id='v1' />
+    <input type='text' id='v2' />
+
     <button type='button' id='btn-get'>GET</button>
     <button type='button' id='btn-post'>POST</button>
     <button type='button' id='btn-put'>PUT</button>
@@ -24,8 +27,8 @@
         $(() => {
             $("#btn-get").click( () => {
                 $.get('/parameter/get', {
-                    num1: 100,
-                    num2: 200
+                    num1: $("#v1").val(),
+                    num2: $("#v2").val()
                 }, (req) => {
                     $("#result").html(req);
                 });
@@ -33,8 +36,8 @@
 
             $("#btn-post").click( () => {
                 $.post('/parameter/post', {
-                    name: "플라스크",
-                    email: "flask@gmail.com"
+                    name: $("#v1").val(),
+                    email: $("#v2").val()
                 }, (req) => {
                     $("#result").html(req);
                 });
@@ -42,8 +45,8 @@
 
             $("#btn-put").click( () => {
                 $.put('/parameter/put', {
-                    name: "플라스크",
-                    email: "flask@gmail.com"
+                    name: $("#v1").val(),
+                    email: $("#v2").val()
                 }, (req) => {
                     $("#result").html(req);
                 });
@@ -51,8 +54,8 @@
 
             $("#btn-delete").click( () => {
                 $.delete('/parameter/delete', {
-                    name: "플라스크",
-                    email: "flask@gmail.com"
+                    name: $("#v1").val(),
+                    email: $("#v2").val()
                 }, (req) => {
                     $("#result").html(req);
                 });
