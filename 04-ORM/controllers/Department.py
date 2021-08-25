@@ -14,6 +14,54 @@ regex = Regex()
 class Department(Resource):
     def get(self):
         q = request.args.get('q')
+        page = request.args.get('page')
+        size = request.args.get('size')
+        
+        try:
+            regex.value(page)
+        except Exception as e:
+            page = 1
+        
+        try:
+            regex.value(size)
+        except Exception as e:
+            size = 20
+            
+        try:
+            regex.num(page, '페이지 번호는 숫자만 가능합니다.')
+            regex.num(size, '한 페이지당 검색수는 숫자만 가능합니다.')
+            regex.between(size, 1, 30, '검색수는 1~30사이만 설정 가능합니다.')
+        except Exception as e:
+            return {'rt': str(e), 'pubDate': get_now_string()}, 400
+        
+        page = int(page)
+        size = int(size)
+        
+        # 전체 게시물 수
+        total_count = 0
+        
+        try:
+            # 전체 데이터 조회
+            step1 = db.session.query(departmentModel)
+            
+            if q:
+                search = "%{query}%".format(query=q)
+                step1 = step1.filter(departmentModel.dname.like(search))
+            
+            total_count = step1.count()
+        except Exception as e:
+            return {'rt': replace_quotes(str(e)), 'pubDate': get_now_string()}, 500
+        
+        
+        # 전체 페이지 수
+        total_page = ((total_count-1) // size) + 1
+        
+        # 파라미터로 전달된 page 번호를 보정
+        if page > total_page:
+            page = total_page
+        
+        # SQL의 limit절에서 사용할 시작위치값
+        offset = (page - 1) * size
         
         # 조회 결과를 저장할 빈 변수
         rs = None
@@ -26,7 +74,9 @@ class Department(Resource):
                 search = "%{query}%".format(query=q)
                 step1 = step1.filter(departmentModel.dname.like(search))
             
-            rs = step1.all()
+            # 페이지 구현 적용
+            step2 = step1.offset(offset).limit(size)
+            rs = step2.all()
         except Exception as e:
             return {'rt': replace_quotes(str(e)), 'pubDate': get_now_string()}, 500
         
@@ -35,7 +85,7 @@ class Department(Resource):
         for i,v in enumerate(rs):
             rs[i] = v.to_dict()
         
-        return {'rt': 'OK', 'item': rs, 'pubDate': get_now_string()}
+        return {'rt': 'OK', 'total_count': total_count, 'total_page': total_page, 'item': rs, 'pubDate': get_now_string()}
     
     def post(self):
         # 저장할 값을 post 파라미터로 수신
