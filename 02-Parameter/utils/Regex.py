@@ -87,7 +87,16 @@ class Regex:
             raise Exception(err)
         
         return True
+    
+    # 입력값 숫자인 경우 주어진 범위 안에서만 허용
+    def between(self, v, min_value, max_value, err = '문자열이 지정된 길이를 초과했습니다.'):
+        self.value(v, err)
+        self.num(v, err)
         
+        n = int(v)
+        if n < min_value or n > max_value:
+            raise Exception(err)
+        return True
         
 
 # 이 소스가 import되지 않을 때(직접 실행될 경우)만 실행하는 블록

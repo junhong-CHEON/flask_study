@@ -7,16 +7,6 @@ class Regex:
             raise Exception(err)
         return True
     
-    # 입력값 숫자인 경우 주어진 범위 안에서만 허용
-    def between(self, v, min_value, max_value, err = '문자열이 지정된 길이를 초과했습니다.'):
-        self.value(v, err)
-        self.num(v, err)
-        
-        n = int(v)
-        if n < min_value or n > max_value:
-            raise Exception(err)
-        return True
-    
     # 입력값이 지정된 글자수를 초과했는지 검사한다.
     def max_length(self, v, lim, err = '문자열이 지정된 길이를 초과했습니다.'):
         if len(str(v).strip()) > lim:
@@ -96,6 +86,16 @@ class Regex:
         if p1.match(v) is None and p2.match(v) is None:
             raise Exception(err)
         
+        return True
+    
+    # 입력값 숫자인 경우 주어진 범위 안에서만 허용
+    def between(self, v, min_value, max_value, err = '문자열이 지정된 길이를 초과했습니다.'):
+        self.value(v, err)
+        self.num(v, err)
+        
+        n = int(v)
+        if n < min_value or n > max_value:
+            raise Exception(err)
         return True
         
         
