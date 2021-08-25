@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+
+        <style>
+            .subplot {
+                float: left;
+                width: 50%;
+            }
+
+            .subplot-item {
+                padding: 10px;
+                width: auto;
+                height: 450px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>타이타닉의 각 객실별 생존률</h1>
+
+        <div class="subplot">
+            <h2>각 객실별 탑승자 대비 생존률</h1>
+            <hr />
+            <div class="subplot-item">
+                <canvas id="mychart5"></canvas>
+            </div>
+        </div>
+
+        <div class="subplot">
+            <h2>객실 대비 생존비율</h2>
+            <hr />
+            <div class="subplot-item">
+                <canvas id="mychart6"></canvas>
+            </div>
+        </div>
+
+        <script src="//code.jquery.com/jquery.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
+        <script src="{{ url_for('static', filename='js/jquery-method-override.js') }}"></script>
+
+        <script>
+            $(function () {
+                const mychart5 = document.getElementById('mychart5');
+                const mychart6 = document.getElementById('mychart6');
+
+                $.get('/titanic', {}, function (req) {
+                    console.log(req.surv_ratio);
+                    field_names = [];
+
+                    for (let i = 0; i < req.surv_ratio.schema.fields.length; i++) {
+                        field_names[i] = req.surv_ratio.schema.fields[i].name;
+                    }
+
+                    pclass = [];
+                    surv = [];
+
+                    for (let i = 0; i < req.surv_ratio.data.length; i++) {
+                        pclass[i] = req.surv_ratio.data[i].Pclass;
+                        surv[i] = req.surv_ratio.data[i].Survived;
+                    }
+
+                    console.log(field_names);
+                    console.log(pclass);
+                    console.log(surv);
+
+                    /** 기본 막대 그래프 그리기 */
+                    new Chart(mychart5, {
+                        // 그래프 종류 (line, bar, pie, scatter)
+                        type: 'bar',
+
+                        // 데이터 영역 (Python의 DataFrame영역을 구성한다고 볼 수 있음.)
+                        data: {
+                            // x축의 항목들 (df의 index를 의미한다고 볼 수 있다.)
+                            labels: pclass,
+                            // df의 각 컬럼을 표현
+                            datasets: [
+                                // 1번 데이터
+                                {
+                                    label: '생존률', // df의 컬럼이름
+                                    data: surv,
+                                    borderWidth: 0.5,
+
+                                    // 색상 처리 팁: border와 background를 동일 색상으로 처리하되, border는 불투명, background는 반투명
+
+                                    // 단일 문자열인 경우 모든 막대가 같은 색상.
+                                    // 데이터의 수 만큼 배열로 색상을 나열할 경우 각 막대별로 다른 색상
+                                    borderColor: ['rgba(255,99,132,1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)'],
+
+                                    // 단일 문자열인 경우 모든 막대가 같은 색상.
+                                    // 데이터의 수 만큼 배열로 색상을 나열할 경우 각 막대별로 다른 색상
+                                    backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)'],
+                                },
+                            ],
+                        },
+
+                        // 그래프 옵션
+                        options: {
+                            // 그래프의 가로, 세로 비율 유지(기본값=true) -> 부모 div의 넓이에만 맞추고 높이는 무시함
+                            // false로 설정할 경우 부모의 width, height에 크기를 맞춤
+                            maintainAspectRatio: false,
+
+                            // 가로 막대 그래프로 전환 (막대그래프이 경우만 사용하는 옵션)
+                            indexAxis: 'x',
+                        },
+                    });
+
+                    /** 도넛 그래프 그리기 */
+                    new Chart(mychart6, {
+                        // 그래프 종류 (line, bar, pie, scatter)
+                        type: 'doughnut',
+
+                        // 데이터 영역 (Python의 DataFrame영역을 구성한다고 볼 수 있음.)
+                        data: {
+                            // x축의 항목들 (df의 index를 의미한다고 볼 수 있다.)
+                            labels: pclass,
+                            // df의 각 컬럼을 표현
+                            datasets: [
+                                // 1번 데이터
+                                {
+                                    label: '생존률',
+                                    data: surv,
+                                    borderWidth: 0.5,
+
+                                    // 색상 처리 팁: border와 background를 동일 색상으로 처리하되, border는 불투명, background는 반투명
+
+                                    // 단일 문자열인 경우 모든 막대가 같은 색상.
+                                    // 데이터의 수 만큼 배열로 색상을 나열할 경우 각 막대별로 다른 색상
+                                    borderColor: ['rgba(255,99,132,1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'],
+
+                                    // 단일 문자열인 경우 모든 막대가 같은 색상.
+                                    // 데이터의 수 만큼 배열로 색상을 나열할 경우 각 막대별로 다른 색상
+                                    backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)'],
+                                },
+                            ],
+                        },
+
+                        // 그래프 옵션
+                        options: {
+                            // 그래프의 가로, 세로 비율 유지(기본값=true) -> 부모 div의 넓이에만 맞추고 높이는 무시함
+                            // false로 설정할 경우 부모의 width, height에 크기를 맞춤
+                            maintainAspectRatio: false,
+
+                            plugins: {
+                                // 범주에 대한 설정
+                                legend: {
+                                    position: 'left',
+                                },
+                            },
+                        },
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>
