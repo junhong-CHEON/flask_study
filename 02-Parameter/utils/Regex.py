@@ -35,7 +35,7 @@ class Regex:
         p = re.compile(r)
         
         # v의 내용이 정규표현식(r)을 충족하지 않을 경우
-        if p.match(v) is None:
+        if p.match(stsr(v)) is None:
             raise Exception(err)
         
         return True
