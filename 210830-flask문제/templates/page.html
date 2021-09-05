@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>02-Parameter</h1>
+    <hr />
+
+    <input type='text' id='v1' />
+    <input type='text' id='v2' />
+
+    <button type='button' id='btn-get'>GET</button>
+    <button type='button' id='btn-post'>POST</button>
+    <button type='button' id='btn-put'>PUT</button>
+    <button type='button' id='btn-delete'>DELETE</button>
+    <hr />
+
+    <div id='result'></div>
+
+    <script src="//code.jquery.com/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/jquery-method-override.js') }}"></script>
+    <script>
+        $(() => {
+            $("#btn-get").click( () => {
+                $.get('/addMemberinfo', {
+                    num1: $("#v1").val(),
+                    num2: $("#v2").val()
+                }, (req) => {
+                    $("#result").html(req);
+                });
+            } );
+
+            $("#btn-post").click( () => {
+                $.post('/editMemberinfo', {
+                    name: $("#v1").val(),
+                    email: $("#v2").val()
+                }, (req) => {
+                    $("#result").html(req);
+                });
+            } );
+
+            $("#btn-put").click( () => {
+                $.put('/doOut', {
+                    name: $("#v1").val(),
+                    email: $("#v2").val()
+                }, (req) => {
+                    $("#result").html(req);
+                });
+            } );
+
+            $("#btn-delete").click( () => {
+                $.delete('/doLogin', {
+                    name: $("#v1").val(),
+                    email: $("#v2").val()
+                }, (req) => {
+                    $("#result").html(req);
+                });
+            } );
+        });
+    </script>
+</body>
+</html>

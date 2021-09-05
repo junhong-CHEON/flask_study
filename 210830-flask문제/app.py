@@ -1,7 +1,14 @@
+"""
+@filename    : app.py
+@description : Flask app.py
+@author      : 천준홍 (cj562270@gmail.com)
+"""
+
 # package import
+
 import os
 import sys
-from flask import Flask
+from flask import Flask, render_template
 from flask_restful import Resource, Api
 from flask_sqlalchemy import SQLAlchemy
 
@@ -9,9 +16,7 @@ from flask_sqlalchemy import SQLAlchemy
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # controller class import
-from controllers.Department import Department as DepartmentController
-from controllers.Professor import Professor as ProfessorController
-from controllers.Student import Student as StudentController
+from controllers.Students import Student as StudentController
 
 # Flask object create
 app = Flask(__name__)
@@ -26,9 +31,9 @@ db = SQLAlchemy(app)
 api = Api(app)
 
 # controller url mapping
-api.add_resource(DepartmentController, '/department')
-api.add_resource(ProfessorController, '/professor')
-api.add_resource(StudentController, '/student')
-# application activate
+api.add_resource(StudentController, '/student/get', endpoint='get', methods=['GET'])
+api.add_resource(StudentController, '/student/put', endpoint='put', methods=['PUT'])
+api.add_resource(StudentController, '/student/delete', endpoint='delete', methods=['DELETE'])
+api.add_resource(StudentController, '/student/post', endpoint='post', methods=['POST'])
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=9901, debug=True)
